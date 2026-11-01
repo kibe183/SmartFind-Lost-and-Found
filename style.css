@@ -1,0 +1,249 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 7%;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #172554;
+}
+
+.logo span {
+    color: #2563eb;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+.nav-button {
+    background: #2563eb;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 7px;
+}
+
+.nav-button:hover {
+    background: #1d4ed8;
+    color: white;
+}
+
+.hero {
+    padding: 90px 7%;
+    background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #ffffff
+    );
+}
+
+.hero-content {
+    max-width: 750px;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1.12;
+    color: #172554;
+    margin-bottom: 25px;
+}
+
+.hero h1 span {
+    color: #2563eb;
+}
+
+.hero-description {
+    max-width: 620px;
+    color: #64748b;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 14px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.primary:hover {
+    background: #1d4ed8;
+}
+
+.secondary {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+.secondary:hover {
+    background: #eff6ff;
+}
+
+.statistics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    padding: 40px 7%;
+}
+
+.stat-card {
+    background: white;
+    text-align: center;
+    padding: 30px 15px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card h2 {
+    color: #2563eb;
+    font-size: 34px;
+}
+
+.stat-card p {
+    color: #64748b;
+}
+
+.how-it-works {
+    padding: 60px 7%;
+    text-align: center;
+}
+
+.how-it-works > h2 {
+    font-size: 34px;
+    color: #172554;
+}
+
+.section-description {
+    color: #64748b;
+    margin: 10px 0 35px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    text-align: left;
+}
+
+.step-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.step-card h3 {
+    margin-bottom: 10px;
+    color: #172554;
+}
+
+.step-card p {
+    color: #64748b;
+}
+
+footer {
+    padding: 25px;
+    background: #172554;
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .statistics,
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding: 65px 7%;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        gap: 14px;
+    }
+
+    nav a {
+        font-size: 13px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        text-align: center;
+    }
+}

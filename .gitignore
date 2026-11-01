@@ -1,0 +1,21 @@
+# Database credentials
+database.php
+
+# Environment files
+.env
+
+# Uploaded user images
+uploads/*
+!uploads/.gitkeep
+
+# Temporary files
+*.log
+*.tmp
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
