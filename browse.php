@@ -435,23 +435,27 @@ function escapeHTML($value) {
                         <p class="status">
                             Status: <?= escapeHTML($report['status']) ?>
                         </p>
+
                         <?php
-                        if (
-                            $report['report_type'] === 'found'
-                            && $report['status'] === 'open'
-                            && isset($_SESSION['user_id'])
-                            && (int)$_SESSION['user_id'] !== (int)$report['user_id']
-                        ):
-                        ?>
+$reportType = strtolower(trim($report['report_type'] ?? ''));
+$reportStatus = strtolower(trim($report['status'] ?? ''));
 
-                            <a
-                                href="claim_item.php?id=<?= (int)$report['id'] ?>"
-                                class="btn"
-                            >
-                                Claim This Item
-                            </a>
+if (
+    $reportType === 'found'
+    && $reportStatus === 'open'
+    && isset($_SESSION['user_id'])
+    && (int)$_SESSION['user_id'] !== (int)$report['user_id']
+):
+?>
 
-                        <?php endif; ?>
+    <a
+        href="claim_item.php?id=<?= (int)$report['id'] ?>"
+        class="btn"
+    >
+        Claim This Item
+    </a>
+
+<?php endif; ?>
                     </div>
 
                 </article>

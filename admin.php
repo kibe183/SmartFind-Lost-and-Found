@@ -62,7 +62,7 @@ $action = $_POST['action'] ?? '';
 
         // Retrieve the claim and ensure it is still pending.
         $check = $conn->prepare("
-            SELECT id, report_id
+            SELECT id, report_id, claimant_id
             FROM claims
             WHERE id = ? AND status = 'pending'
             LIMIT 1
@@ -140,12 +140,76 @@ $action = $_POST['action'] ?? '';
                     $updateReport->close();
 
                     // Reject other pending claims for the same item.
-                    $rejectOthers = $conn->prepare("
-                        UPDATE claims
-                        SET status = 'rejected'
-                        WHERE report_id = ?
-                          AND id <> ?
-                          AND status = 'pending'
+                   $updateReport->close();
+
+// Find other users who have pending claims for this item.
+$otherClaims = $conn->prepare("
+    SELECT claimant_id
+    FROM claims
+    WHERE report_id = ?
+      AND id <> ?
+      AND status = 'pending'
+");
+
+$otherClaims->bind_param(
+    "ii",
+    $claim['report_id'],
+    $claimId
+);
+
+$otherClaims->execute();
+
+$otherClaimants = $otherClaims->get_result()->fetch_all(MYSQLI_ASSOC);
+
+$otherClaims->close();
+
+// Reject the remaining pending claims.
+$rejectOthers = $conn->prepare("
+    UPDATE claims
+    SET status = 'rejected'
+    WHERE report_id = ?
+      AND id <> ?
+      AND status = 'pending'
+");
+
+$rejectOthers->bind_param(
+    "ii",
+    $claim['report_id'],
+    $claimId
+);
+
+$rejectOthers->execute();
+$rejectOthers->close();
+
+// Notify everyone whose claim was automatically rejected.
+$otherMessage = "Your claim for report #"
+    . $claim['report_id']
+    . " was not successful because another claimant's claim was approved.";
+
+$otherType = 'claim_rejected';
+
+$notifyOthers = $conn->prepare("
+    INSERT INTO notifications
+    (user_id, message, type, related_report_id)
+    VALUES (?, ?, ?, ?)
+");
+
+foreach ($otherClaimants as $otherClaimant) {
+
+    $otherUserId = (int) $otherClaimant['claimant_id'];
+
+    $notifyOthers->bind_param(
+        "issi",
+        $otherUserId,
+        $otherMessage,
+        $otherType,
+        $claim['report_id']
+    );
+
+    $notifyOthers->execute();
+}
+
+$notifyOthers->close();
                     ");
 
                     $rejectOthers->bind_param(
@@ -176,7 +240,35 @@ $action = $_POST['action'] ?? '';
 
                     $updateClaim->close();
                 }
+                // Send a notification to the claimant.
+$notificationMessage = $newStatus === 'approved'
+    ? "Good news! Your claim for report #"
+        . $claim['report_id']
+        . " has been approved. The item has been marked as resolved."
+    : "Your claim for report #"
+        . $claim['report_id']
+        . " has been rejected.";
 
+$notificationType = $newStatus === 'approved'
+    ? 'claim_approved'
+    : 'claim_rejected';
+
+$notify = $conn->prepare("
+    INSERT INTO notifications
+        (user_id, message, type, related_report_id)
+    VALUES (?, ?, ?, ?)
+");
+
+$notify->bind_param(
+    "issi",
+    $claim['claimant_id'],
+    $notificationMessage,
+    $notificationType,
+    $claim['report_id']
+);
+
+$notify->execute();
+$notify->close();
                 $conn->commit();
 
                 $message = $newStatus === 'approved'
